@@ -1,0 +1,35 @@
+server:
+  port: 8080
+
+micronaut:
+  router:
+    expose-route-mapping: true
+  management:
+    endpoints:
+      all:
+        enabled: true
+        sensitive: false
+      routes:
+        enabled: true
+        sensitive: false
+        expose: true
+  application:
+    name: vehicle-status-service
+  http:
+    services:
+      insurance:
+        urls: http://localhost:9090
+      maintenance:
+        urls: http://localhost:9090
+      default:
+        read-timeout: 10s
+  logging:
+    level:
+      ROOT: DEBUG
+      io.micronaut.http.client: TRACE
+      io.micronaut.http.server: TRACE
+
+  jackson:
+    enabled: true
+  serialization:
+    enabled: false

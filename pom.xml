@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>vehicle.status.service</groupId>
   <artifactId>vehicle-status-service</artifactId>
@@ -12,6 +13,7 @@
     <artifactId>micronaut-parent</artifactId>
     <version>4.7.0</version>
   </parent>
+
   <properties>
     <packaging>jar</packaging>
     <jdk.version>21</jdk.version>
@@ -21,6 +23,7 @@
     <micronaut.aot.enabled>false</micronaut.aot.enabled>
     <micronaut.aot.packageName>vehicle.status.service.aot.generated</micronaut.aot.packageName>
     <exec.mainClass>vehicle.status.service.Application</exec.mainClass>
+    <micronaut.serde.version>2.9.0</micronaut.serde.version>
   </properties>
 
   <repositories>
@@ -31,40 +34,154 @@
   </repositories>
 
   <dependencies>
+
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- Lombok -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Micronaut Runtime -->
+    <dependency>
+      <groupId>io.micronaut</groupId>
+      <artifactId>micronaut-runtime</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>io.micronaut</groupId>
+          <artifactId>micronaut-serde-jackson</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>io.micronaut.serde</groupId>
+          <artifactId>micronaut-serde-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- Context Propagation (if needed) -->
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>context-propagation</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.micronaut</groupId>
+      <artifactId>micronaut-management</artifactId>
       <scope>compile</scope>
     </dependency>
+
+    <!-- Micronaut Netty Server -->
     <dependency>
       <groupId>io.micronaut</groupId>
       <artifactId>micronaut-http-server-netty</artifactId>
-      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>io.micronaut</groupId>
+          <artifactId>micronaut-serde-jackson</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>io.micronaut.serde</groupId>
+          <artifactId>micronaut-serde-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
+
+    <dependency>
+      <groupId>io.micronaut</groupId>
+      <artifactId>micronaut-core</artifactId>
+    </dependency>
+
+    <!-- Micronaut Reactor Support -->
     <dependency>
       <groupId>io.micronaut.reactor</groupId>
       <artifactId>micronaut-reactor</artifactId>
-      <scope>compile</scope>
     </dependency>
+
     <dependency>
-      <groupId>io.micronaut.serde</groupId>
-      <artifactId>micronaut-serde-jackson</artifactId>
-      <scope>compile</scope>
+      <groupId>io.micronaut</groupId>
+      <artifactId>micronaut-inject-java</artifactId>
+      <version>${micronaut.version}</version>
+      <scope>test</scope>
     </dependency>
+
+    <!-- Micronaut Validation -->
+    <dependency>
+      <groupId>io.micronaut.validation</groupId>
+      <artifactId>micronaut-validation</artifactId>
+    </dependency>
+
+    <!-- Micronaut HTTP Client -->
+    <dependency>
+      <groupId>io.micronaut</groupId>
+      <artifactId>micronaut-http-client</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>io.micronaut</groupId>
+          <artifactId>micronaut-serde-jackson</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>io.micronaut.serde</groupId>
+          <artifactId>micronaut-serde-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- Micronaut Reactor HTTP Client -->
+    <dependency>
+      <groupId>io.micronaut.reactor</groupId>
+      <artifactId>micronaut-reactor-http-client</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>io.micronaut</groupId>
+          <artifactId>micronaut-serde-jackson</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>io.micronaut.serde</groupId>
+          <artifactId>micronaut-serde-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>io.micronaut</groupId>
+      <artifactId>micronaut-jackson-databind</artifactId>
+      <version>${micronaut.version}</version>
+    </dependency>
+
+    <!-- Reactor Core -->
+    <dependency>
+      <groupId>io.projectreactor</groupId>
+      <artifactId>reactor-core</artifactId>
+    </dependency>
+
+    <!-- Logging -->
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <scope>runtime</scope>
     </dependency>
-    <dependency>
-      <groupId>io.micronaut</groupId>
-      <artifactId>micronaut-http-client</artifactId>
-      <scope>test</scope>
-    </dependency>
+
+    <!-- Test Dependencies -->
     <dependency>
       <groupId>io.micronaut.test</groupId>
       <artifactId>micronaut-test-junit5</artifactId>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>io.micronaut</groupId>
+          <artifactId>micronaut-serde-jackson</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>io.micronaut.serde</groupId>
+          <artifactId>micronaut-serde-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -76,9 +193,28 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.projectreactor</groupId>
+      <artifactId>reactor-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-standalone</artifactId>
+      <version>3.0.1</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
+
   <build>
     <plugins>
+      <!-- Micronaut Maven Plugin -->
       <plugin>
         <groupId>io.micronaut.maven</groupId>
         <artifactId>micronaut-maven-plugin</artifactId>
@@ -86,40 +222,42 @@
           <configFile>aot-${packaging}.properties</configFile>
         </configuration>
       </plugin>
+
+      <!-- Maven Enforcer Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
       </plugin>
+
+      <!-- Maven Compiler Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.10.1</version>
         <configuration>
-          <!-- Uncomment to enable incremental compilation -->
-          <!-- <useIncrementalCompilation>false</useIncrementalCompilation> -->
-
+          <source>${java.version}</source>
+          <target>${java.version}</target>
           <annotationProcessorPaths combine.children="append">
+            <!-- Micronaut Annotation Processors -->
             <path>
               <groupId>io.micronaut</groupId>
-              <artifactId>micronaut-http-validation</artifactId>
-              <version>${micronaut.core.version}</version>
+              <artifactId>micronaut-inject-java</artifactId>
+              <version>${micronaut.version}</version>
             </path>
+<!--            <path>-->
+<!--              <groupId>io.micronaut.serde</groupId>-->
+<!--              <artifactId>micronaut-serde-processor</artifactId>-->
+<!--              <version>${micronaut.serde.version}</version>-->
+<!--            </path>-->
+            <!-- Lombok Annotation Processor -->
             <path>
-              <groupId>io.micronaut.serde</groupId>
-              <artifactId>micronaut-serde-processor</artifactId>
-              <version>${micronaut.serialization.version}</version>
-              <exclusions>
-                <exclusion>
-                  <groupId>io.micronaut</groupId>
-                  <artifactId>micronaut-inject</artifactId>
-                </exclusion>
-              </exclusions>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
             </path>
           </annotationProcessorPaths>
-          <compilerArgs>
-            <arg>-Amicronaut.processing.group=vehicle.status.service</arg>
-            <arg>-Amicronaut.processing.module=vehicle-status-service</arg>
-          </compilerArgs>
         </configuration>
+        <!-- No need for 'annotationProcessorPathsUseDepMgmt' parameter -->
       </plugin>
     </plugins>
   </build>
